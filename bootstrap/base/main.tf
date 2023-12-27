@@ -24,22 +24,21 @@ resource "linode_nodebalancer" "awesome_cluster_lb" {
 
 resource "linode_nodebalancer_config" "awesome_cluster_lb_config" {
   nodebalancer_id = linode_nodebalancer.awesome_cluster_lb.id
-  port            = 443
-  protocol        = "http"
-  check           = "http"
-  check_path      = "/ping"
+  port            = 80
+  protocol        = "tcp"
+  check           = "connection"
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 30
-  stickiness      = "http_cookie"
   algorithm       = "source"
+  stickiness      = "none"
 }
 
 resource "linode_nodebalancer_node" "awesome_cluster_lb_node" {
   count           = var.nodes_count
   nodebalancer_id = linode_nodebalancer.awesome_cluster_lb.id
   config_id       = linode_nodebalancer_config.awesome_cluster_lb_config.id
-  address         = "${element(local.lke_node_ips, count.index)}:80"
+  address         = "${element(local.lke_node_ips, count.index)}:30080"
   label           = var.label
   weight          = 50
 }
