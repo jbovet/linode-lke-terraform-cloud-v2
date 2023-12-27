@@ -48,5 +48,5 @@ variable "pools" {
 
 variable "kubeconfig" {
   type    = string
-  default = "~/.kube/config"
+  default = ".kube/config"
 }
