@@ -16,13 +16,13 @@ resource "linode_lke_cluster" "awesome_cluster" {
 }
 
 resource "linode_nodebalancer" "awesome_cluster_lb" {
-  label                = var.label
+  label                = "${var.label}-lb"
   region               = var.region
   tags                 = var.tags
   client_conn_throttle = var.conn_throttle
 }
 
-resource "linode_nodebalancer_config" "awesome_cluster_lb_config" {
+resource "linode_nodebalancer_config" "http_awesome_cluster_lb_config" {
   nodebalancer_id = linode_nodebalancer.awesome_cluster_lb.id
   port            = 80
   protocol        = "tcp"
@@ -30,16 +30,37 @@ resource "linode_nodebalancer_config" "awesome_cluster_lb_config" {
   check_attempts  = 3
   check_timeout   = 5
   check_interval  = 30
-  algorithm       = "source"
+  algorithm       = "roundrobin"
   stickiness      = "none"
 }
 
-resource "linode_nodebalancer_node" "awesome_cluster_lb_node" {
+resource "linode_nodebalancer_config" "https_awesome_cluster_lb_config" {
+  nodebalancer_id = linode_nodebalancer.awesome_cluster_lb.id
+  port            = 443
+  protocol        = "tcp"
+  check           = "connection"
+  check_attempts  = 3
+  check_timeout   = 5
+  check_interval  = 30
+  algorithm       = "roundrobin"
+  stickiness      = "none"
+}
+
+resource "linode_nodebalancer_node" "http_awesome_cluster_lb_node" {
   count           = var.nodes_count
   nodebalancer_id = linode_nodebalancer.awesome_cluster_lb.id
-  config_id       = linode_nodebalancer_config.awesome_cluster_lb_config.id
+  config_id       = linode_nodebalancer_config.http_awesome_cluster_lb_config.id
   address         = "${element(local.lke_node_ips, count.index)}:30080"
-  label           = var.label
+  label           = "${var.label}${count.index}"
+  weight          = 50
+}
+
+resource "linode_nodebalancer_node" "https_awesome_cluster_lb_node" {
+  count           = var.nodes_count
+  nodebalancer_id = linode_nodebalancer.awesome_cluster_lb.id
+  config_id       = linode_nodebalancer_config.https_awesome_cluster_lb_config.id
+  address         = "${element(local.lke_node_ips, count.index)}:30443"
+  label           = "${var.label}${count.index}"
   weight          = 50
 }
 
