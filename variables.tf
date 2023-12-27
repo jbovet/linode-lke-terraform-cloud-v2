@@ -14,7 +14,6 @@ variable "github_org" {
   type    = string
   default = "jbovet"
 }
-
 variable "github_repository" {
   type    = string
   default = "awesome-cluster"
