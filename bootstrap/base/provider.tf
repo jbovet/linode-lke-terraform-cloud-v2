@@ -7,10 +7,18 @@ terraform {
     local = {
       source = "hashicorp/local"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4.21.0"
+    }
   }
 }
 provider "linode" {
   token = var.token
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
 }
 
 

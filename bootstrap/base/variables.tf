@@ -14,7 +14,7 @@ variable "k8s_version" {
 
 variable "label" {
   description = "The unique label to assign to this cluster. (required)"
-  default     = "awesome_cluster"
+  default     = "awesome-cluster"
 }
 
 variable "region" {
@@ -49,4 +49,24 @@ variable "pools" {
 variable "kubeconfig" {
   type    = string
   default = ".kube/config"
+}
+
+variable "cloudflare_api_token" {
+  type        = string
+  default     = ""
+  description = "Cloudflare API Token (required)"
+  sensitive   = true
+}
+
+variable "cloudflare_zone_id" {
+  type        = string
+  default     = ""
+  description = "Cloudflare Zone ID (required)"
+  sensitive   = true
+}
+
+variable "root_domain" {
+  type        = string
+  default     = "jpbd.dev"
+  description = "root domain"
 }
