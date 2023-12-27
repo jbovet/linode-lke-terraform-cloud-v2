@@ -20,10 +20,10 @@ output "kubeconfig" {
 }
 
 resource "local_file" "config_path" {
-    content  =  base64decode(linode_lke_cluster.awesome_cluster.kubeconfig)
-    filename = var.kubeconfig
+  content  = base64decode(linode_lke_cluster.awesome_cluster.kubeconfig)
+  filename = var.kubeconfig
 }
 
 output "kube_config_path" {
-  value     = local_file.config_path.filename
+  value = local_file.config_path.filename
 }

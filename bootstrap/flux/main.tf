@@ -1,6 +1,6 @@
 variable "kube_config_path" {
   sensitive = false
-  type = string
+  type      = string
 }
 
 variable "github_token" {
@@ -63,5 +63,5 @@ provider "flux" {
 
 resource "flux_bootstrap_git" "this" {
   depends_on = [github_repository_deploy_key.this]
-  path = "deploys"
+  path       = "deploys"
 }
