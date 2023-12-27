@@ -1,4 +1,4 @@
-variable "kubeconfig_path" {
+variable "kube_config_path" {
   sensitive = false
   type = string
 }
@@ -50,7 +50,7 @@ resource "github_repository_deploy_key" "this" {
 
 provider "flux" {
   kubernetes = {
-    config_path = var.kubeconfig_path
+    config_path = var.kube_config_path
   }
   git = {
     url = "ssh://git@github.com/${var.github_org}/${var.github_repository}.git"
